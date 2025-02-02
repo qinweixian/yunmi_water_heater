@@ -15,7 +15,8 @@ from homeassistant.components.water_heater import (
     STATE_OFF,
     _LOGGER,
     WaterHeaterEntity,
-    PLATFORM_SCHEMA
+    PLATFORM_SCHEMA,
+    WaterHeaterEntityFeature
 )
 from homeassistant.const import CONF_NAME, CONF_HOST, CONF_TOKEN
 from homeassistant.exceptions import PlatformNotReady
@@ -60,7 +61,7 @@ class YunmiWaterHeater(WaterHeaterEntity):
         self._max_temp = 65
         self._min_temp = 30
         # self._supported_features = SUPPORT_TARGET_TEMPERATURE | SUPPORT_OPERATION_MODE | SUPPORT_AWAY_MODE
-        self._supported_features = (1, 2, 4, 8)
+        self._supported_features = WaterHeaterEntityFeature.TARGET_TEMPERATURE | WaterHeaterEntityFeature.OPERATION_MODE | WaterHeaterEntityFeature.AWAY_MODE | WaterHeaterEntityFeature.ON_OFF
 
         self._device = device
         self._name = name
@@ -186,9 +187,10 @@ class YunmiWaterHeater(WaterHeaterEntity):
             self._device.send('set_temp', [target_temp])
         self.async_schedule_update_ha_state()
 
-    async def async_set_operation_mode(self, **kwargs):
+    async def async_set_operation_mode(self, current_operation: str):
         """Set new target operation mode."""
-        current_operation = kwargs.get(ATTR_OPERATION_MODE)
+        #current_operation = kwargs.get(ATTR_OPERATION_MODE)
+        _LOGGER.info("async_set_operation_mode current_operation %s", current_operation)
         mode_code = int(YUNMI_OPERATION_KEY[current_operation])
 
         if mode_code < 99:
