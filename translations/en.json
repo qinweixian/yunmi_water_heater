@@ -1,0 +1,160 @@
+{
+  "config": {
+    "title": "云米热水器 (Yunmi Water Heater)",
+    "step": {
+      "user": {
+        "title": "添加云米热水器",
+        "description": "选择配置方式",
+        "menu_options": {
+          "scan": "扫描局域网（输入 Token，自动识别 IP）",
+          "cloud": "米家账号登录（自动获取 Token 和 IP）",
+          "manual": "手动填写 IP 和 Token"
+        }
+      },
+      "scan": {
+        "title": "扫描局域网",
+        "description": "将自动扫描局域网内的米家设备，并用 Token 验证哪一台是热水器。\n\nToken 是 32 位十六进制字符串：如果之前的老插件还能用，直接复制 configuration.yaml 里的 token 即可；也可以改用「米家账号登录」方式自动获取。",
+        "data": {
+          "token": "Token",
+          "name": "名称"
+        }
+      },
+      "scan_pick": {
+        "title": "选择热水器",
+        "description": "发现了多台匹配的设备，请选择热水器"
+      },
+      "cloud": {
+        "title": "米家账号登录",
+        "description": "使用米家 App 的账号密码登录（不是 Home Assistant 账号）。登录成功后自动读取设备列表，无需手动填写 Token 和 IP。\n\n{verify_url}",
+        "data": {
+          "username": "米家账号（手机号/邮箱）",
+          "password": "密码"
+        }
+      },
+      "cloud_pick": {
+        "title": "选择热水器",
+        "description": "米家账号下有多台热水器，请选择"
+      },
+      "manual": {
+        "title": "手动填写",
+        "description": "手动填写热水器的局域网 IP（如 192.168.5.172）和 Token（32 位十六进制）。\n\n获取 Token 的常用方法：旧配置文件、米家 App 备份数据库，或 python-miio 工具。",
+        "data": {
+          "host": "IP 地址",
+          "token": "Token",
+          "name": "名称"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "局域网内没有发现任何米家设备，请确认热水器已通电并联网",
+      "no_devices": "发现了米家设备，但没有一台能通过 Token 验证，请检查 Token 是否正确",
+      "invalid_token": "Token 验证失败，请确认 Token 是否属于这台热水器",
+      "invalid_token_format": "Token 必须是 32 位十六进制字符串",
+      "invalid_auth": "米家账号或密码错误",
+      "two_factor_required": "需要二次验证：请在浏览器打开以下链接登录并确认授权，完成后回到本页面重新提交账号密码\n\n{verify_url}",
+      "cloud_error": "米家云端服务异常，请稍后再试，或改用「扫描局域网」方式",
+      "cloud_no_waterheater": "米家账号下没有找到热水器设备，请确认设备已绑定到该账号"
+    },
+    "abort": {
+      "already_configured": "这台热水器已经配置过了"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "云米热水器设置",
+        "data": {
+          "scan_interval": "状态刷新间隔（秒，5-600）"
+        }
+      }
+    }
+  },
+  "entity": {
+    "button": {
+      "one_shot_preheat_floor1": {
+        "name": "一楼预热"
+      },
+      "one_shot_preheat_floor2": {
+        "name": "二楼预热"
+      }
+    },
+    "number": {
+      "preheat_duration_floor1": {
+        "name": "一楼预热时长"
+      },
+      "preheat_duration_floor2": {
+        "name": "二楼预热时长"
+      }
+    },
+    "switch": {
+      "preheat": {
+        "name": "一键预热"
+      }
+    },
+    "sensor": {
+      "one_shot_end": {
+        "name": "一次性预热结束"
+      },
+      "err_status": {
+        "name": "故障状态"
+      },
+      "velocity": {
+        "name": "水流速度"
+      },
+      "preheat_time_1": {
+        "name": "预热时段 1"
+      },
+      "preheat_time_2": {
+        "name": "预热时段 2"
+      },
+      "preheat_time_3": {
+        "name": "预热时段 3"
+      },
+      "hot_water": {
+        "name": "水量"
+      },
+      "need_clean": {
+        "name": "需要清洗"
+      },
+      "mode_type": {
+        "name": "模式类型"
+      },
+      "appoint_start": {
+        "name": "预约开始"
+      },
+      "appoint_end": {
+        "name": "预约结束"
+      }
+    }
+  },
+  "services": {
+    "one_shot_preheat": {
+      "name": "一次性预热",
+      "description": "开启预热，并在指定秒数后自动关闭，用于一次性把水管里的冷水预热。不填时长时使用所选用水点的「预热时长」数字实体当前设置的值。",
+      "fields": {
+        "location": {
+          "name": "用水点",
+          "description": "选择本次预热对应的用水点，不填时长时使用该用水点的预热时长。"
+        },
+        "duration": {
+          "name": "预热秒数",
+          "description": "10-3600 秒。不填则使用所选用水点预热时长实体的值。"
+        }
+      }
+    },
+    "send_command": {
+      "name": "发送原始命令",
+      "description": "直接向热水器发送 miIO 命令，用于调试或调用未内置的功能（例如设置预热时段）。响应支持 optional。",
+      "fields": {
+        "method": {
+          "name": "方法名",
+          "description": "miIO 方法名，如 set_temp / set_power / set_preheat_now"
+        },
+        "params": {
+          "name": "参数",
+          "description": "参数数组，如 [1] 或 [41]"
+        }
+      }
+    }
+  }
+}

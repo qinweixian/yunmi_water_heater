@@ -1,0 +1,47 @@
+one_shot_preheat:
+  name: 一次性预热
+  description: 开启预热，并在指定秒数后自动关闭，用于一次性把水管里的冷水预热。不填时长时使用所选用水点的「预热时长」数字实体当前设置的值。
+  fields:
+    location:
+      name: 用水点
+      description: 选择本次预热对应的用水点，不填时长时使用该用水点的预热时长。
+      required: false
+      default: floor1
+      example: floor1
+      selector:
+        select:
+          options:
+            - label: 一楼
+              value: floor1
+            - label: 二楼
+              value: floor2
+    duration:
+      name: 预热秒数
+      description: 10-3600 秒。不填则使用所选用水点预热时长实体的值。
+      required: false
+      example: 45
+      selector:
+        number:
+          min: 10
+          max: 3600
+          step: 1
+          mode: box
+
+send_command:
+  name: 发送原始命令
+  description: 直接向热水器发送 miIO 命令，用于调试或调用未内置的功能（例如设置预热时段）。
+  fields:
+    method:
+      name: 方法名
+      description: miIO 方法名，如 set_temp / set_power / set_preheat_now
+      required: true
+      example: set_preheat_now
+      selector:
+        text: null
+    params:
+      name: 参数
+      description: 参数数组，如 [1] 或 [41]
+      required: false
+      example: "[1]"
+      selector:
+        object: null

@@ -1,12 +1,11 @@
 {
   "domain": "yunmi",
-  "name": "Yunmi",
-  "version": "1.0.0",
-  "documentation": "https://www.home-assistant.io/components/yunmi",
-  "requirements": [
-    "construct>=2.9.45",
-    "python-miio>=0.4.7"
-  ],
-  "dependencies": [],
-  "codeowners": []
+  "name": "Yunmi Water Heater",
+  "codeowners": ["@kingqin"],
+  "config_flow": true,
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "loggers": ["miio"],
+  "requirements": ["python-miio==0.5.12"],
+  "version": "2.1.0"
 }
