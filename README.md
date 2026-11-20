@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="logo.png" width="128" alt="Yunmi Water Heater logo">
+</div>
+
 # Yunmi Water Heater (云米燃气热水器)
 
 [![hacs](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
