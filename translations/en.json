@@ -76,6 +76,9 @@
       },
       "one_shot_preheat_floor2": {
         "name": "二楼预热"
+      },
+      "stop_preheat": {
+        "name": "立即停止预热"
       }
     },
     "number": {
